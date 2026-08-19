@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Online Hotel Booking</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f2f2f2;
+}
+
+header{
+background:#0066cc;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+width:90%;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-top:20px;
+border-radius:8px;
+box-shadow:0px 0px 5px gray;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:8px 0;
+}
+
+button{
+padding:10px 20px;
+background:green;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+button:hover{
+background:darkgreen;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+table,th,td{
+border:1px solid black;
+}
+
+th,td{
+padding:10px;
+text-align:center;
+}
+
+#dashboard{
+display:none;
+}
+
+#bookingSection{
+display:none;
+}
+
+#history{
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Online Hotel Room Booking System</h1>
+
+</header>
+
+<div class="container">
+
+<div class="card" id="loginPage">
+
+<h2>User Login</h2>
+
+<input type="text" id="username" placeholder="Username">
+
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p id="msg" style="color:red;"></p>
+
+</div>
+
+<div id="dashboard">
+
+<div class="card">
+
+<h2>Search Rooms</h2>
+
+<label>Destination</label>
+
+<select id="city">
+
+<option>Chennai</option>
+
+<option>Bangalore</option>
+
+<option>Hyderabad</option>
+
+<option>Goa</option>
+
+</select>
+
+<label>Check In</label>
+
+<input type="date" id="checkin">
+
+<label>Check Out</label>
+
+<input type="date" id="checkout">
+
+<label>Guests</label>
+
+<input type="number" id="guest" value="1">
+
+<button onclick="showRooms()">Search Rooms</button>
+
+</div>
+
+<div class="card" id="bookingSection">
+
+<h2>Available Rooms</h2>
+
+<table>
+
+<tr>
+
+<th>Room Type</th>
+
+<th>Price</th>
+
+<th>Status</th>
+
+<th>Book</th>
+
+</tr>
+
+<tbody id="roomTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card" id="history">
+
+<h2>Booking History</h2>
+
+<table>
+
+<tr>
+
+<th>Room</th>
+
+<th>Price</th>
+
+<th>Status</th>
+
+</tr>
+
+<tbody id="historyTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<br>
+
+<button onclick="logout()" style="background:red;">Logout</button>
+
+</div>
+
+</div>
+
+<script>
+
+let rooms=[
+
+{
+type:"Single Room",
+price:1500,
+status:"Available"
+},
+
+{
+type:"Double Room",
+price:2500,
+status:"Available"
+},
+
+{
+type:"Deluxe Room",
+price:4000,
+status:"Available"
+},
+
+{
+type:"Suite",
+price:6000,
+status:"Available"
+}
+
+];
+
+let bookings=[];
+
+function login(){
+
+let u=document.getElementById("username").value;
+
+let p=document.getElementById("password").value;
+
+if(u=="admin" && p=="1234"){
+
+document.getElementById("loginPage").style.display="none";
+
+document.getElementById("dashboard").style.display="block";
+
+}
+else{
+
+document.getElementById("msg").innerHTML="Invalid Login";
+
+}
+
+}
+
+function showRooms(){
+
+document.getElementById("bookingSection").style.display="block";
+
+let data="";
+
+for(let i=0;i<rooms.length;i++){
+
+data+="<tr>";
+
+data+="<td>"+rooms[i].type+"</td>";
+
+data+="<td>₹"+rooms[i].price+"</td>";
+
+data+="<td>"+rooms[i].status+"</td>";
+
+data+="<td><button onclick='bookRoom("+i+")'>Book</button></td>";
+
+data+="</tr>";
+
+}
+
+document.getElementById("roomTable").innerHTML=data;
+
+}
+function bookRoom(index){
+
+alert("Room Booked Successfully!");
+
+bookings.push({
+
+room:rooms[index].type,
+
+price:rooms[index].price,
+
+status:"Booked"
+
+});
+
+showHistory();
+
+}
+
+function showHistory(){
+
+document.getElementById("history").style.display="block";
+
+let data="";
+
+for(let i=0;i<bookings.length;i++){
+
+data+="<tr>";
+
+data+="<td>"+bookings[i].room+"</td>";
+
+data+="<td>₹"+bookings[i].price+"</td>";
+
+data+="<td>"+bookings[i].status+"</td>";
+
+data+="</tr>";
+
+}
+
+document.getElementById("historyTable").innerHTML=data;
+
+}
+
+function logout(){
+
+document.getElementById("dashboard").style.display="none";
+
+document.getElementById("loginPage").style.display="block";
+
+document.getElementById("username").value="";
+
+document.getElementById("password").value="";
+
+document.getElementById("msg").innerHTML="";
+
+}
+
+</script>
+
+<div class="container">
+
+<div class="card">
+
+<h2>About Our Hotel</h2>
+
+<p>
+Welcome to our Online Hotel Booking System.
+We provide comfortable and affordable rooms with modern facilities.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Contact Information</h2>
+
+<p><b>Hotel Name:</b> Grand Palace Hotel</p>
+
+<p><b>Phone:</b> +91 9876543210</p>
+
+<p><b>Email:</b> hotel@example.com</p>
+
+<p><b>Address:</b> Chennai, Tamil Nadu</p>
+
+</div>
+
+<div class="card">
+
+<h2>Customer Service FAQ</h2>
+
+<p><b>Q:</b> How can I book a room?</p>
+
+<p>A: Login, search rooms and click Book.</p>
+
+<p><b>Q:</b> Can I cancel my booking?</p>
+
+<p>A: Yes, cancellation is allowed before arrival.</p>
+
+<p><b>Q:</b> Is online payment available?</p>
+
+<p>A: Yes.</p>
+
+</div>
+
+<div class="card">
+
+<h2>Local Travel Guide</h2>
+
+<ul>
+
+<li>Marina Beach</li>
+
+<li>Mahabalipuram</li>
+
+<li>Kapaleeshwarar Temple</li>
+
+<li>Express Avenue Mall</li>
+
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2>Privacy Policy</h2>
+
+<p>
+Your booking information is kept confidential and is used only for reservation purposes.
+</p>
+
+</div>
+
+</div>
+
+</body>
+</html>

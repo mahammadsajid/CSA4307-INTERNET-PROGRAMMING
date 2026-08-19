@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System</title>
+    <style>
+        body{
+            font-family:Arial;
+            background:#f2f2f2;
+            margin:0;
+        }
+
+        .container{
+            width:400px;
+            margin:70px auto;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 0 10px gray;
+        }
+
+        h2{
+            text-align:center;
+        }
+
+        input{
+            width:95%;
+            padding:10px;
+            margin:10px 0;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            background:green;
+            color:white;
+            border:none;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background:darkgreen;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        table,th,td{
+            border:1px solid black;
+        }
+
+        th,td{
+            padding:10px;
+            text-align:center;
+        }
+
+        #dashboard{
+            display:none;
+            padding:20px;
+        }
+
+        #loginError{
+            color:red;
+            text-align:center;
+        }
+
+        #result{
+            color:blue;
+            font-weight:bold;
+            margin-top:10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container" id="loginPage">
+
+<h2>Library Login</h2>
+
+<input type="text" id="username" placeholder="Enter Username">
+
+<input type="password" id="password" placeholder="Enter Password">
+
+<button onclick="login()">Login</button>
+
+<p id="loginError"></p>
+
+</div>
+
+<div id="dashboard">
+
+<h1 align="center">Library Management Dashboard</h1>
+
+<button onclick="logout()" style="width:150px;background:red;">Logout</button>
+
+<hr>
+
+<h2>Search Book</h2>
+
+<input type="text" id="search" placeholder="Enter Book Name">
+
+<button onclick="searchBook()">Search</button>
+
+<p id="result"></p>
+
+<h2>Available Books</h2>
+
+<table>
+
+<tr>
+
+<th>ID</th>
+
+<th>Book</th>
+
+<th>Author</th>
+
+<th>Status</th>
+
+</tr>
+
+<tbody id="books"></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+var library=[
+
+{id:101,name:"Java Programming",author:"James Gosling",status:"Available"},
+
+{id:102,name:"Python Basics",author:"Guido van Rossum",status:"Available"},
+
+{id:103,name:"HTML and CSS",author:"John Duckett",status:"Issued"},
+
+{id:104,name:"JavaScript",author:"Brendan Eich",status:"Available"},
+
+{id:105,name:"Database Systems",author:"Navathe",status:"Available"}
+
+];
+
+function login(){
+
+var user=document.getElementById("username").value;
+
+var pass=document.getElementById("password").value;
+
+if(user=="admin" && pass=="1234"){
+
+document.getElementById("loginPage").style.display="none";
+
+document.getElementById("dashboard").style.display="block";
+
+showBooks();
+
+}
+else{
+
+document.getElementById("loginError").innerHTML="Invalid Username or Password";
+
+}
+
+}
+
+function showBooks(){
+
+var data="";
+
+for(var i=0;i<library.length;i++){
+
+data+="<tr>";
+
+data+="<td>"+library[i].id+"</td>";
+
+data+="<td>"+library[i].name+"</td>";
+
+data+="<td>"+library[i].author+"</td>";
+
+data+="<td>"+library[i].status+"</td>";
+
+data+="</tr>";
+
+}
+
+document.getElementById("books").innerHTML=data;
+
+}
+
+function searchBook(){
+
+var key=document.getElementById("search").value.toLowerCase();
+
+var found=false;
+
+for(var i=0;i<library.length;i++){
+
+if(library[i].name.toLowerCase().includes(key)){
+
+document.getElementById("result").innerHTML=
+
+"Book Found : "+library[i].name+
+
+" | Author : "+library[i].author+
+
+" | Status : "+library[i].status;
+
+found=true;
+
+break;
+
+}
+
+}
+
+if(found==false){
+
+document.getElementById("result").innerHTML="Book Not Found";
+
+}
+
+}
+
+function logout(){
+
+document.getElementById("dashboard").style.display="none";
+
+document.getElementById("loginPage").style.display="block";
+
+document.getElementById("username").value="";
+
+document.getElementById("password").value="";
+
+document.getElementById("loginError").innerHTML="";
+
+document.getElementById("result").innerHTML="";
+
+}
+
+</script>
+
+</body>
+</html>

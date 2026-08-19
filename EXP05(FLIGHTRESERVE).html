@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Online Flight Reservation System</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f2f2f2;
+}
+
+header{
+background:#003366;
+color:white;
+text-align:center;
+padding:15px;
+}
+
+.container{
+width:90%;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-top:20px;
+border-radius:8px;
+box-shadow:0px 0px 5px gray;
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
+}
+
+button{
+padding:10px 20px;
+background:green;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+button:hover{
+background:darkgreen;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+table,th,td{
+border:1px solid black;
+padding:10px;
+text-align:center;
+}
+
+#dashboard{
+display:none;
+}
+
+#flightSection{
+display:none;
+}
+
+#history{
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Online Flight Reservation System</h1>
+
+</header>
+
+<div class="container">
+
+<div class="card" id="loginPage">
+
+<h2>User Login</h2>
+
+<input type="text" id="username" placeholder="Username">
+
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p id="msg" style="color:red;"></p>
+
+</div>
+
+<div id="dashboard">
+
+<div class="card">
+
+<h2>Search Flight</h2>
+
+<label>From</label>
+
+<select id="from">
+
+<option>Chennai</option>
+<option>Hyderabad</option>
+<option>Bangalore</option>
+<option>Delhi</option>
+
+</select>
+
+<label>To</label>
+
+<select id="to">
+
+<option>Mumbai</option>
+<option>Kolkata</option>
+<option>Goa</option>
+<option>Delhi</option>
+
+</select>
+
+<label>Date</label>
+
+<input type="date">
+
+<label>Class</label>
+
+<select>
+
+<option>Economy</option>
+<option>Business</option>
+<option>First Class</option>
+
+</select>
+
+<button onclick="showFlights()">Search Flight</button>
+
+</div>
+
+<div class="card" id="flightSection">
+
+<h2>Available Flights</h2>
+
+<table>
+
+<tr>
+
+<th>Flight No</th>
+<th>Flight</th>
+<th>Seats</th>
+<th>Fare</th>
+<th>Book</th>
+
+</tr>
+
+<tbody id="flightTable"></tbody>
+
+</table>
+
+</div>
+
+<div class="card" id="history">
+
+<h2>My Tickets</h2>
+
+<table>
+
+<tr>
+
+<th>Ticket No</th>
+<th>Flight</th>
+<th>Status</th>
+
+</tr>
+
+<tbody id="ticketTable"></tbody>
+
+</table>
+
+</div>
+
+<br>
+
+<button onclick="logout()" style="background:red;">Logout</button>
+
+</div>
+
+</div>
+
+<script>
+
+let flights=[
+
+{
+no:"AI101",
+name:"Air India",
+seat:120,
+fare:5500
+},
+
+{
+no:"6E202",
+name:"IndiGo",
+seat:90,
+fare:4300
+},
+
+{
+no:"SG303",
+name:"SpiceJet",
+seat:80,
+fare:3900
+},
+
+{
+no:"UK404",
+name:"Vistara",
+seat:60,
+fare:7200
+}
+
+];
+
+let tickets=[];
+
+function login(){
+
+let u=document.getElementById("username").value;
+
+let p=document.getElementById("password").value;
+
+if(u=="admin" && p=="1234"){
+
+document.getElementById("loginPage").style.display="none";
+
+document.getElementById("dashboard").style.display="block";
+
+}
+else{
+
+document.getElementById("msg").innerHTML="Invalid Username or Password";
+
+}
+
+}
+
+function showFlights(){
+
+document.getElementById("flightSection").style.display="block";
+
+let data="";
+
+for(let i=0;i<flights.length;i++){
+
+data+="<tr>";
+
+data+="<td>"+flights[i].no+"</td>";
+
+data+="<td>"+flights[i].name+"</td>";
+
+data+="<td>"+flights[i].seat+"</td>";
+
+data+="<td>₹"+flights[i].fare+"</td>";
+
+data+="<td><button onclick='bookFlight("+i+")'>Book</button></td>";
+
+data+="</tr>";
+
+}
+
+document.getElementById("flightTable").innerHTML=data;
+
+}
+
+function bookFlight(index){
+
+let ticketNo="TK"+Math.floor(100000+Math.random()*900000);
+
+alert("Ticket Booked Successfully!\nTicket No : "+ticketNo);
+
+tickets.push({
+
+ticket:ticketNo,
+
+flight:flights[index].name,
+
+fare:flights[index].fare,
+
+status:"Confirmed"
+
+});
+
+showTickets();
+
+}
+
+function showTickets(){
+
+document.getElementById("history").style.display="block";
+
+let data="";
+
+for(let i=0;i<tickets.length;i++){
+
+data+="<tr>";
+
+data+="<td>"+tickets[i].ticket+"</td>";
+
+data+="<td>"+tickets[i].flight+"</td>";
+
+data+="<td>"+tickets[i].status+"</td>";
+
+data+="</tr>";
+
+}
+
+document.getElementById("ticketTable").innerHTML=data;
+
+}
+
+function cancelTicket(){
+
+let no=document.getElementById("cancelTicketNo").value;
+
+let found=false;
+
+for(let i=0;i<tickets.length;i++){
+
+if(tickets[i].ticket==no){
+
+tickets.splice(i,1);
+
+showTickets();
+
+alert("Ticket Cancelled Successfully");
+
+found=true;
+
+break;
+
+}
+
+}
+
+if(!found){
+
+alert("Invalid Ticket Number");
+
+}
+
+}
+
+function printTicket(){
+
+let no=document.getElementById("printTicketNo").value;
+
+let found=false;
+
+for(let i=0;i<tickets.length;i++){
+
+if(tickets[i].ticket==no){
+
+alert("Printing Ticket\n\nTicket No : "+tickets[i].ticket+
+"\nFlight : "+tickets[i].flight+
+"\nStatus : "+tickets[i].status);
+
+found=true;
+
+break;
+
+}
+
+}
+
+if(!found){
+
+alert("Ticket Not Found");
+
+}
+
+}
+
+function submitFeedback(){
+
+let feedback=document.getElementById("feedback").value;
+
+if(feedback==""){
+
+alert("Please enter feedback.");
+
+}
+else{
+
+alert("Thank you for your feedback!");
+
+document.getElementById("feedback").value="";
+
+}
+
+}
+
+function adminReport(){
+
+let total=tickets.length;
+
+let amount=0;
+
+for(let i=0;i<tickets.length;i++){
+
+amount+=tickets[i].fare;
+
+}
+
+alert("Admin Report\n\nTotal Bookings : "+total+"\nTotal Revenue : ₹"+amount);
+
+}
+
+function logout(){
+
+document.getElementById("dashboard").style.display="none";
+
+document.getElementById("loginPage").style.display="block";
+
+document.getElementById("username").value="";
+
+document.getElementById("password").value="";
+
+document.getElementById("msg").innerHTML="";
+
+}
+
+</script>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Ticket Payment</h2>
+
+<p>Payment Mode : Online / Offline</p>
+
+<p>After successful payment, the ticket is confirmed.</p>
+
+</div>
+
+<div class="card">
+
+<h2>Cancel Ticket</h2>
+
+<input type="text" id="cancelTicketNo" placeholder="Enter Ticket Number">
+
+<button onclick="cancelTicket()">Cancel Ticket</button>
+
+</div>
+
+<div class="card">
+
+<h2>Print Ticket</h2>
+
+<input type="text" id="printTicketNo" placeholder="Enter Ticket Number">
+
+<button onclick="printTicket()">Print Ticket</button>
+
+</div>
+
+<div class="card">
+
+<h2>Customer Feedback</h2>
+
+<textarea id="feedback" placeholder="Enter your feedback"></textarea>
+
+<button onclick="submitFeedback()">Submit Feedback</button>
+
+</div>
+
+<div class="card">
+
+<h2>Admin Report</h2>
+
+<button onclick="adminReport()">Generate Report</button>
+
+</div>
+
+</div>
+
+</body>
+</html>
